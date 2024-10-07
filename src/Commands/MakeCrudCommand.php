@@ -11,15 +11,23 @@ class MakeCrudCommand extends Command
     protected $signature = 'make:crud {name} {--fields=} {--api} {--force} {--seed} {--policy} {--requests} {--resource} {--test} {--factory}';
     protected $description = 'Generate a complete CRUD setup for the specified model with advanced options';
     public $output;
-    protected $modelName;
-    protected $tableName;
-    protected $fields = [];
+    protected string $modelName;
+    protected string $tableName;
+    protected array $fields = [];
 
-    public function handle()
+    public function handle(): void
     {
         $this->modelName = $this->argument('name');
+        if (!$this->modelName){
+            $this->error('The name field is required.');
+            return;
+        }
         $this->tableName = Str::plural(Str::snake($this->modelName));
         $this->parseFields();
+        if (!$this->fields){
+            $this->error('The fields option is required.');
+            return;
+        }
         if ($this->option('force') || $this->confirm("This will create multiple files. Do you wish to continue?")) {
             $this->generateModel();
             $this->generateMigration();
@@ -42,6 +50,9 @@ class MakeCrudCommand extends Command
             if ($this->option('resource')) {
                 $this->generateResource();
             }
+            if ($this->option('factory')) {
+                $this->generateFactory();
+            }
 
             if ($this->option('test')) {
                 $this->generateTests();
@@ -51,7 +62,7 @@ class MakeCrudCommand extends Command
         }
     }
 
-    protected function parseFields()
+    protected function parseFields(): void
     {
         $fields = $this->option('fields');
         if ($fields) {
@@ -63,92 +74,78 @@ class MakeCrudCommand extends Command
         }
     }
 
-    protected function generateModel()
+    protected function generateModel(): void
     {
         $modelTemplate = $this->getStub('model');
-        $modelTemplate = str_replace(
-            ['{{modelName}}', '{{tableName}}', '{{fillable}}'],
-            [$this->modelName, $this->tableName, $this->getFillableString()],
-            $modelTemplate
-        );
+        $modelTemplate = str_replace(['{{modelName}}', '{{tableName}}', '{{fillable}}'], [$this->modelName, $this->tableName, $this->getFillableString()], $modelTemplate);
 
         $path = app_path("Models/{$this->modelName}.php");
         $this->createFile($path, $modelTemplate);
     }
 
-    protected function generateMigration()
+    protected function generateMigration(): void
     {
         $migrationTemplate = $this->getStub('migration');
-        $migrationTemplate = str_replace(
-            ['{{tableName}}', '{{fields}}'],
-            [$this->tableName, $this->getMigrationFields()],
-            $migrationTemplate
-        );
+        $migrationTemplate = str_replace(['{{tableName}}', '{{fields}}'], [$this->tableName, $this->getMigrationFields()], $migrationTemplate);
 
         $fileName = date('Y_m_d_His') . "_create_{$this->tableName}_table.php";
         $path = database_path("migrations/{$fileName}");
         $this->createFile($path, $migrationTemplate);
     }
 
-    protected function generateController()
+    protected function generateController(): void
     {
         $controllerName = "{$this->modelName}Controller";
         $controllerTemplate = $this->getStub($this->option('api') ? 'controller.api' : 'controller');
-        $controllerTemplate = str_replace(
-            ['{{modelName}}', '{{modelNameLowerCase}}', '{{controllerName}}'],
-            [$this->modelName, strtolower($this->modelName), $controllerName],
-            $controllerTemplate
-        );
+        $controllerTemplate = str_replace(['{{modelName}}', '{{modelNameLowerCase}}', '{{controllerName}}'], [$this->modelName, strtolower($this->modelName), $controllerName], $controllerTemplate);
 
         $path = app_path("Http/Controllers/{$controllerName}.php");
         $this->createFile($path, $controllerTemplate);
     }
 
-    protected function generateViews()
+    protected function generateViews(): void
     {
         if (!$this->option('api')) {
             $views = ['index', 'create', 'edit', 'show'];
             foreach ($views as $view) {
                 $viewTemplate = $this->getStub("views.{$view}");
-                $viewTemplate = str_replace(
-                    ['{{modelName}}', '{{modelNameLowerCase}}', '{{fields}}'],
-                    [$this->modelName, strtolower($this->modelName), $this->getViewFields($view)],
-                    $viewTemplate
-                );
+                $viewTemplate = str_replace(['{{modelName}}', '{{modelNameLowerCase}}', '{{fields}}'], [$this->modelName, strtolower($this->modelName), $this->getViewFields($view)], $viewTemplate);
 
-                $path = resource_path("views/" . strtolower($this->modelName) . "/{$view}.blade.php");
+                $path = resource_path("views/" . Str::snake(Str::plural($this->modelName)) . "/{$view}.blade.php");
                 $this->createFile($path, $viewTemplate);
             }
         }
     }
 
-    protected function generateRoutes()
+    protected function generateRoutes(): void
     {
         $routeTemplate = $this->getStub($this->option('api') ? 'routes.api' : 'routes.web');
-        $routeTemplate = str_replace(
-            ['{{modelName}}', '{{modelNameLowerCase}}'],
-            [$this->modelName, strtolower($this->modelName)],
-            $routeTemplate
-        );
+        $routeTemplate = str_replace(['{{modelName}}', '{{modelNameLowerCase}}'], [$this->modelName, strtolower($this->modelName)], $routeTemplate);
 
         $this->info("Add the following routes to your routes file:");
         $this->info($routeTemplate);
     }
 
-    protected function generateSeeder()
+    protected function generateFactory(): void
+    {
+        $factoryTemplate = $this->getStub('factory');
+        $factoryTemplate = str_replace(['{{modelName}}', '{{fields}}'], [$this->modelName, $this->getFactoryFields()], $factoryTemplate);
+        $path = database_path("factories/{$this->modelName}Factory.php");
+        $this->createFile($path, $factoryTemplate);
+    }
+
+    protected function generateSeeder(): void
     {
         $seederTemplate = $this->getStub('seeder');
-        $seederTemplate = str_replace(
-            ['{{modelName}}', '{{fields}}'],
-            [$this->modelName, $this->getSeederFields()],
-            $seederTemplate
-        );
+        $seederTemplate = str_replace(['{{modelName}}', '{{fields}}'], [$this->modelName, $this->getSeederFields()], $seederTemplate);
 
         $path = database_path("seeders/{$this->modelName}Seeder.php");
         $this->createFile($path, $seederTemplate);
+//        TODO : Ajouter la ligne suivante dans le fichier DatabaseSeeder.php a faire dans la prochaine version
+//        $this->addSeederToSeederFile($path);
     }
 
-    protected function generatePolicy()
+    protected function generatePolicy(): void
     {
         $policyTemplate = $this->getStub('policy');
         $policyTemplate = str_replace(['{{modelName}}', '{{modelNameLowerCase}}'], [$this->modelName, strtolower($this->modelName)], $policyTemplate);
@@ -157,49 +154,37 @@ class MakeCrudCommand extends Command
         $this->createFile($path, $policyTemplate);
     }
 
-    protected function generateFormRequests()
+    protected function generateFormRequests(): void
     {
         $requests = ['Store', 'Update'];
         foreach ($requests as $action) {
             $requestTemplate = $this->getStub('request');
-            $requestTemplate = str_replace(
-                ['{{modelName}}', '{{action}}', '{{rules}}'],
-                [$this->modelName, $action, $this->getRequestRules()],
-                $requestTemplate
-            );
+            $requestTemplate = str_replace(['{{modelName}}', '{{action}}', '{{rules}}'], [$this->modelName, $action, $this->getRequestRules()], $requestTemplate);
 
             $path = app_path("Http/Requests/{$action}{$this->modelName}Request.php");
             $this->createFile($path, $requestTemplate);
         }
     }
 
-    protected function generateResource()
+    protected function generateResource(): void
     {
         $resourceTemplate = $this->getStub('resource');
-        $resourceTemplate = str_replace(
-            ['{{modelName}}', '{{fields}}'],
-            [$this->modelName, $this->getResourceFields()],
-            $resourceTemplate
-        );
+        $resourceTemplate = str_replace(['{{modelName}}', '{{fields}}'], [$this->modelName, $this->getResourceFields()], $resourceTemplate);
 
         $path = app_path("Http/Resources/{$this->modelName}Resource.php");
         $this->createFile($path, $resourceTemplate);
     }
 
-    protected function generateTests()
+    protected function generateTests(): void
     {
         $testTemplate = $this->getStub($this->option('api') ? 'test.api' : 'test.feature');
-        $testTemplate = str_replace(
-            ['{{modelName}}', '{{modelNameLowerCase}}'],
-            [$this->modelName, strtolower($this->modelName)],
-            $testTemplate
-        );
+        $testTemplate = str_replace(['{{modelName}}', '{{modelNameLowerCase}}'], [$this->modelName, strtolower($this->modelName)], $testTemplate);
 
         $path = base_path("tests/" . ($this->option('api') ? "Unit" : "Feature") . "/{$this->modelName}Test.php");
         $this->createFile($path, $testTemplate);
     }
 
-    protected function getStub($type)
+    protected function getStub($type): bool|string
     {
         $stubPath = __DIR__ . '/stubs/' . $type . '.stub';
 
@@ -210,7 +195,7 @@ class MakeCrudCommand extends Command
         return file_get_contents($stubPath);
     }
 
-    protected function createFile($path, $content)
+    protected function createFile($path, $content): void
     {
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
@@ -224,12 +209,12 @@ class MakeCrudCommand extends Command
         }
     }
 
-    protected function getFillableString()
+    protected function getFillableString(): string
     {
         return "'" . implode("', '", array_keys($this->fields)) . "'";
     }
 
-    protected function getMigrationFields()
+    protected function getMigrationFields(): string
     {
         $fields = '';
         foreach ($this->fields as $name => $type) {
@@ -242,7 +227,7 @@ class MakeCrudCommand extends Command
         return $fields;
     }
 
-    protected function getViewFields($view)
+    protected function getViewFields($view): string
     {
         $fields = '';
         foreach ($this->fields as $name => $type) {
@@ -260,99 +245,82 @@ class MakeCrudCommand extends Command
         return $fields;
     }
 
-    protected function generateFormField($name, $type)
+    protected function generateFormField($name, $type): string
     {
         $label = ucfirst(str_replace('_', ' ', $name));
         $value = $this->option('api') ? '' : '{{ $' . strtolower($this->modelName) . '->' . $name . ' }}';
 
-        switch ($type) {
-            case 'text':
-                return "<div class=\"mb-4\">
+        return match ($type) {
+            'text' => "<div class=\"mb-4\">
                 <label for=\"{$name}\" class=\"block text-sm font-medium text-gray-700\">{$label}</label>
                 <textarea name=\"{$name}\" id=\"{$name}\" rows=\"3\" class=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50\">{$value}</textarea>
-            </div>\n";
-            case 'boolean':
-                return "<div class=\"mb-4\">
+            </div>\n",
+            'boolean' => "<div class=\"mb-4\">
                 <label for=\"{$name}\" class=\"inline-flex items-center\">
                     <input type=\"checkbox\" name=\"{$name}\" id=\"{$name}\" class=\"rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50\" {$value} ? 'checked' : ''>
                     <span class=\"ml-2\">{$label}</span>
                 </label>
-            </div>\n";
-            default:
-                return "<div class=\"mb-4\">
+            </div>\n",
+            default => "<div class=\"mb-4\">
                 <label for=\"{$name}\" class=\"block text-sm font-medium text-gray-700\">{$label}</label>
                 <input type=\"text\" name=\"{$name}\" id=\"{$name}\" value=\"{$value}\" class=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50\">
-            </div>\n";
-        }
+            </div>\n",
+        };
     }
 
-    protected function getSeederFields()
+    protected function getSeederFields(): string
     {
         $fields = [];
         foreach ($this->fields as $name => $type) {
-            switch ($type) {
-                case 'string':
-                    $fields[] = "'{$name}' => \$this->faker->sentence";
-                    break;
-                case 'text':
-                    $fields[] = "'{$name}' => \$this->faker->paragraph";
-                    break;
-                case 'integer':
-                    $fields[] = "'{$name}' => \$this->faker->numberBetween(1, 100)";
-                    break;
-                case 'boolean':
-                    $fields[] = "'{$name}' => \$this->faker->boolean";
-                    break;
-                case 'date':
-                    $fields[] = "'{$name}' => \$this->faker->date";
-                    break;
-                case 'datetime':
-                    $fields[] = "'{$name}' => \$this->faker->dateTime";
-                    break;
-                case 'decimal':
-                    $fields[] = "'{$name}' => \$this->faker->randomFloat(2, 0, 999)";
-                    break;
-                default:
-                    $fields[] = "'{$name}' => \$this->faker->word";
-            }
+            $fields[] = match ($type) {
+                'string' => "'{$name}' => \$this->faker->sentence",
+                'text' => "'{$name}' => \$this->faker->paragraph",
+                'integer' => "'{$name}' => \$this->faker->numberBetween(1, 100)",
+                'boolean' => "'{$name}' => \$this->faker->boolean",
+                'date' => "'{$name}' => \$this->faker->date",
+                'datetime' => "'{$name}' => \$this->faker->dateTime",
+                'decimal' => "'{$name}' => \$this->faker->randomFloat(2, 0, 999)",
+                default => "'{$name}' => \$this->faker->word",
+            };
         }
         return implode(",\n            ", $fields);
     }
 
-    protected function getRequestRules()
+    protected function getFactoryFields(): string
+    {
+        $fiels = [];
+        foreach ($this->fields as $name => $type) {
+            $fiels[] = match ($type) {
+                'text' => "'{$name}' => \$this->faker->text",
+                'boolean' => "'{$name}' => \$this->faker->boolean",
+                'email'=> "'{$name}' => \$this->faker->unique()->safeEmail",
+                'integer'=>"'{$name}' => \$this->faker->numberBetween(1, 100)",
+                default => "'{$name}' => \$this->faker->word",
+            };
+        }
+        return implode(",\n            ", $fiels);
+    }
+
+    protected function getRequestRules(): string
     {
         $rules = [];
         foreach ($this->fields as $name => $type) {
-            switch ($type) {
-                case 'string':
-                    $rules[] = "'{$name}' => 'required|string|max:255'";
-                    break;
-                case 'text':
-                    $rules[] = "'{$name}' => 'required|string'";
-                    break;
-                case 'integer':
-                    $rules[] = "'{$name}' => 'required|integer'";
-                    break;
-                case 'boolean':
-                    $rules[] = "'{$name}' => 'boolean'";
-                    break;
-                case 'date':
-                    $rules[] = "'{$name}' => 'required|date'";
-                    break;
-                case 'datetime':
-                    $rules[] = "'{$name}' => 'required|date_format:Y-m-d H:i:s'";
-                    break;
-                case 'decimal':
-                    $rules[] = "'{$name}' => 'required|numeric'";
-                    break;
-                default:
-                    $rules[] = "'{$name}' => 'required'";
-            }
+            $rules[] = match ($type) {
+                'string' => "'{$name}' => 'required|string|max:255'",
+                'email' => "'{$name}' => 'required|string|email|max:255|unique:{$this->tableName}',",
+                'text' => "'{$name}' => 'required|string'",
+                'integer' => "'{$name}' => 'required|integer'",
+                'boolean' => "'{$name}' => 'boolean'",
+                'date' => "'{$name}' => 'required|date'",
+                'datetime' => "'{$name}' => 'required|date_format:Y-m-d H:i:s'",
+                'decimal' => "'{$name}' => 'required|numeric'",
+                default => "'{$name}' => 'required'",
+            };
         }
         return implode(",\n            ", $rules);
     }
 
-    protected function getResourceFields()
+    protected function getResourceFields(): string
     {
         $fields = [];
         foreach ($this->fields as $name => $type) {
