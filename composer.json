@@ -1,12 +1,20 @@
 {
   "name": "jiordiviera/laravel-task-automator",
   "description": "A Laravel package for automating repetitive tasks",
-  "keywords": ["laravel", "task", "automator", "crud", "generator"],
+  "keywords": [
+    "laravel",
+    "task",
+    "automator",
+    "crud",
+    "generator"
+  ],
+  "type": "library",
   "license": "MIT",
   "authors": [
     {
       "name": "Jiordi Viera",
-      "email": "jiordikengne@gmail.com"
+      "email": "jiordikengne@gmail.com",
+      "role": "Owner"
     }
   ],
   "require": {
