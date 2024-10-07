@@ -1,0 +1,41 @@
+<?php
+
+namespace Tests\Unit;
+
+use Tests\TestCase;
+use App\Models\{{modelName}};
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class {{modelName}}Test extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_it_can_create_{{modelNameLowerCase}}()
+    {
+        $response = $this->postJson(route('{{modelNameLowerCase}}.store'), [
+            // Ajouter les champs nécessaires ici
+        ]);
+
+        $response->assertStatus(201);
+    }
+
+    public function test_it_can_update_{{modelNameLowerCase}}()
+    {
+        $model = {{modelName}}::factory()->create();
+
+        $response = $this->putJson(route('{{modelNameLowerCase}}.update', $model), [
+            // Ajouter les champs nécessaires ici
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_it_can_delete_{{modelNameLowerCase}}()
+    {
+        $model = {{modelName}}::factory()->create();
+
+        $response = $this->deleteJson(route('{{modelNameLowerCase}}.destroy', $model));
+
+        $response->assertStatus(204);
+    }
+}

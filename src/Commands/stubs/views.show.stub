@@ -1,0 +1,18 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container mx-auto p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold">{{ ucfirst($modelName) }} Details</h2>
+        <a href="{{ route('{{modelNameLowerCase}}.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded">Back</a>
+    </div>
+    <div class="bg-white shadow-md rounded p-6">
+        @foreach ($fields as $name => $type)
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">{{ ucfirst($name) }}</label>
+                <p class="mt-1 text-lg text-gray-800">{{ $item->$name }}</p>
+            </div>
+        @endforeach
+    </div>
+</div>
+@endsection

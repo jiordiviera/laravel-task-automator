@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\{{modelName}};
+use Illuminate\Http\Request;
+
+class {{controllerName}} extends Controller
+{
+    public function index()
+    {
+        ${{modelNameLowerCase}}s = {{modelName}}::all();
+        return view('{{modelNameLowerCase}}.index', compact('{{modelNameLowerCase}}s'));
+    }
+
+    public function create()
+    {
+        return view('{{modelNameLowerCase}}.create');
+    }
+
+    public function store(Request $request)
+    {
+        ${{modelNameLowerCase}} = {{modelName}}::create($request->all());
+        return redirect()->route('{{modelNameLowerCase}}.index')->with('success', '{{modelName}} created successfully.');
+    }
+
+    public function show({{modelName}} ${{modelNameLowerCase}})
+    {
+        return view('{{modelNameLowerCase}}.show', compact('{{modelNameLowerCase}}'));
+    }
+
+    public function edit({{modelName}} ${{modelNameLowerCase}})
+    {
+        return view('{{modelNameLowerCase}}.edit', compact('{{modelNameLowerCase}}'));
+    }
+
+    public function update(Request $request, {{modelName}} ${{modelNameLowerCase}})
+    {
+        ${{modelNameLowerCase}}->update($request->all());
+        return redirect()->route('{{modelNameLowerCase}}.index')->with('success', '{{modelName}} updated successfully.');
+    }
+
+    public function destroy({{modelName}} ${{modelNameLowerCase}})
+    {
+        ${{modelNameLowerCase}}->delete();
+        return redirect()->route('{{modelNameLowerCase}}.index')->with('success', '{{modelName}} deleted successfully.');
+    }
+}

@@ -1,0 +1,34 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="container mx-auto px-4">
+        <h1 class="text-2xl font-bold my-4">{{modelName}} List</h1>
+        <a href="{{ route('{{modelNameLowerCase}}.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create New {{modelName}}</a>
+        <table class="table-auto w-full mt-4">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">ID</th>
+                    {{fields}}
+                    <th class="px-4 py-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(${{modelNameLowerCase}}s as ${{modelNameLowerCase}})
+                    <tr>
+                        <td class="border px-4 py-2">{{ ${{modelNameLowerCase}}->id }}</td>
+                        {{fields}}
+                        <td class="border px-4 py-2">
+                            <a href="{{ route('{{modelNameLowerCase}}.show', ${{modelNameLowerCase}}) }}" class="text-blue-500 hover:text-blue-700">View</a>
+                            <a href="{{ route('{{modelNameLowerCase}}.edit', ${{modelNameLowerCase}}) }}" class="text-yellow-500 hover:text-yellow-700 ml-2">Edit</a>
+                            <form action="{{ route('{{modelNameLowerCase}}.destroy', ${{modelNameLowerCase}}) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700 ml-2">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+@endsection

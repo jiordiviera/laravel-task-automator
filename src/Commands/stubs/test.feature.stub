@@ -1,0 +1,30 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\{{modelName}};
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+class {{modelName}}Test extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_user_can_view_all_{{modelNameLowerCase}}()
+    {
+        $models = {{modelName}}::factory()->count(3)->create();
+
+        $response = $this->get(route('{{modelNameLowerCase}}.index'));
+
+        $response->assertStatus(200);
+    }
+
+    public function test_user_can_view_single_{{modelNameLowerCase}}()
+    {
+        $model = {{modelName}}::factory()->create();
+
+        $response = $this->get(route('{{modelNameLowerCase}}.show', $model));
+
+        $response->assertStatus(200);
+    }
+}

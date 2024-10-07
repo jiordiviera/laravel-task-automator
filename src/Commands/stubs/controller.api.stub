@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\{{modelName}};
+use Illuminate\Http\Request;
+
+class {{controllerName}} extends Controller
+{
+    public function index()
+    {
+        ${{modelNameLowerCase}}s = {{modelName}}::all();
+        return response()->json(${{modelNameLowerCase}}s);
+    }
+
+    public function store(Request $request)
+    {
+        ${{modelNameLowerCase}} = {{modelName}}::create($request->all());
+        return response()->json(${{modelNameLowerCase}}, 201);
+    }
+
+    public function show({{modelName}} ${{modelNameLowerCase}})
+    {
+        return response()->json(${{modelNameLowerCase}});
+    }
+
+    public function update(Request $request, {{modelName}} ${{modelNameLowerCase}})
+    {
+        ${{modelNameLowerCase}}->update($request->all());
+        return response()->json(${{modelNameLowerCase}});
+    }
+
+    public function destroy({{modelName}} ${{modelNameLowerCase}})
+    {
+        ${{modelNameLowerCase}}->delete();
+        return response()->json(null, 204);
+    }
+}

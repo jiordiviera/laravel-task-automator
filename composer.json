@@ -1,0 +1,47 @@
+{
+  "name": "jiordiviera/laravel-task-automator",
+  "description": "A Laravel package for automating repetitive tasks",
+  "keywords": ["laravel", "task", "automator", "crud", "generator"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jiordi Viera",
+      "email": "jiordikengne@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "illuminate/support": "^9.0",
+    "illuminate/console": "^9.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^7.46",
+    "pestphp/pest": "^1.23",
+    "pestphp/pest-plugin-laravel": "^1.4",
+    "phpunit/phpunit": "^9.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "JiordiViera\\LaravelTaskAutomator\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "JiordiViera\\LaravelTaskAutomator\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "JiordiViera\\LaravelTaskAutomator\\LaravelTaskAutomatorServiceProvider"
+      ]
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
+}
