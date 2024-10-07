@@ -33,4 +33,4 @@ jobs:
         run: ls -la
 
       - name: Execute Tests (Unit and Feature tests) via PHPUnit/Pest
-        run: php artisan test
+        run: composer test

@@ -17,6 +17,9 @@
       "role": "Owner"
     }
   ],
+  "scripts": {
+    "test": "vendor/bin/pest"
+  },
   "require": {
     "php": "^8.0",
     "illuminate/support": "^8.0 || ^9.0 || ^10.0 || ^11.0",
