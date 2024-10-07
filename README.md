@@ -16,7 +16,7 @@ Laravel Task Automator is a powerful Laravel package designed to supercharge you
 First, add Laravel Task Automator to your Laravel project using Composer:
 
 ```bash
-composer require jiordiviera/laravel-task-automator
+composer require jiordiviera/laravel-task-automator:dev-main
 ```
 
 Once installed, you can use the `make:crud` command to generate various components for your application.
