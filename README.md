@@ -1,5 +1,10 @@
 # Laravel Task Automator 📦✨
-[![Latest Stable Version](http://poser.pugx.org/phpunit/phpunit/v)](https://packagist.org/packages/phpunit/phpunit) [![Total Downloads](http://poser.pugx.org/phpunit/phpunit/downloads)](https://packagist.org/packages/phpunit/phpunit) [![Latest Unstable Version](http://poser.pugx.org/phpunit/phpunit/v/unstable)](https://packagist.org/packages/phpunit/phpunit) [![License](http://poser.pugx.org/phpunit/phpunit/license)](https://packagist.org/packages/phpunit/phpunit) [![PHP Version Require](http://poser.pugx.org/phpunit/phpunit/require/php)](https://packagist.org/packages/phpunit/phpunit)
+[![Latest Stable Version](http://poser.pugx.org/jiordiviera/laravel-task-automator/v)](https://packagist.org/packages/jiordivier/laravel-task-automator) 
+[![Total Downloads](http://poser.pugx.org/jiordiviera/laravel-task-automator/downloads)](https://packagist.org/packages/jiordivier/laravel-task-automator) 
+[![Latest Unstable Version](http://poser.pugx.org/jiordiviera/laravel-task-automator/v/unstable)](https://packagist.org/packages/jiordivier/laravel-task-automator) 
+[![License](http://poser.pugx.org/jiordiviera/laravel-task-automator/license)](https://packagist.org/packages/jiordivier/laravel-task-automator) 
+[![PHP Version Require](http://poser.pugx.org/jiordiviera/laravel-task-automator/require/php)](https://packagist.org/packages/jiordivier/laravel-task-automator)
+
 Laravel Task Automator is a powerful Laravel package designed to supercharge your workflow by automating repetitive tasks like CRUD generation, authentication setup, seeder creation, API configuration, and more. Save time and focus on what truly matters—building awesome applications. 🚀
 
 ## ✨ Features
