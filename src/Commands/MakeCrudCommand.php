@@ -151,7 +151,7 @@ class MakeCrudCommand extends Command
     protected function generatePolicy()
     {
         $policyTemplate = $this->getStub('policy');
-        $policyTemplate = str_replace('{{modelName}}', $this->modelName, $policyTemplate);
+        $policyTemplate = str_replace(['{{modelName}}', '{{modelNameLowerCase}}'], [$this->modelName, strtolower($this->modelName)], $policyTemplate);
 
         $path = app_path("Policies/{$this->modelName}Policy.php");
         $this->createFile($path, $policyTemplate);

@@ -23,7 +23,7 @@ class LaravelTaskAutomatorServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__.'/Commands/stubs' => base_path('stubs/vendor/laravel-task-automator'),
