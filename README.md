@@ -1,13 +1,5 @@
 # Laravel Task Automator 📦✨
-![Laravel Version](https://img.shields.io/badge/Laravel-7.x%20to%2011.x-red)
-![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue)
-![GitHub License](https://img.shields.io/github/license/jiordiviera/laravel-task-automator)
-<p align="center">
-    <a href="https://packagist.org/packages/mckenziearts/laravel-notify"><img src="https://poser.pugx.org/mckenziearts/laravel-notify/d/total.svg" alt="Total Downloads"></a>
-    <a href="https://packagist.org/packages/mckenziearts/laravel-notify"><img src="https://poser.pugx.org/mckenziearts/laravel-notify/v/stable.svg" alt="Latest Stable Version"></a>
-    <a href="https://packagist.org/packages/mckenziearts/laravel-notify"><img src="https://poser.pugx.org/mckenziearts/laravel-notify/license.svg" alt="License"></a>
-</p>
-
+[![Latest Stable Version](http://poser.pugx.org/phpunit/phpunit/v)](https://packagist.org/packages/phpunit/phpunit) [![Total Downloads](http://poser.pugx.org/phpunit/phpunit/downloads)](https://packagist.org/packages/phpunit/phpunit) [![Latest Unstable Version](http://poser.pugx.org/phpunit/phpunit/v/unstable)](https://packagist.org/packages/phpunit/phpunit) [![License](http://poser.pugx.org/phpunit/phpunit/license)](https://packagist.org/packages/phpunit/phpunit) [![PHP Version Require](http://poser.pugx.org/phpunit/phpunit/require/php)](https://packagist.org/packages/phpunit/phpunit)
 Laravel Task Automator is a powerful Laravel package designed to supercharge your workflow by automating repetitive tasks like CRUD generation, authentication setup, seeder creation, API configuration, and more. Save time and focus on what truly matters—building awesome applications. 🚀
 
 ## ✨ Features
