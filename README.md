@@ -1,5 +1,4 @@
 # Laravel Task Automator 📦✨
-![License](https://img.shields.io/github/license/jiordiviera/laravel-task-automator)
 ![Laravel Version](https://img.shields.io/badge/Laravel-7.x%20to%2011.x-red)
 ![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue)
 
